@@ -36,3 +36,33 @@ jobs:
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
         ninja
         ls ./bin
+
+    - name: Checkout AO_Binaries
+      uses: actions/checkout@v2
+      with:
+        repository: AO-Developments/AO_Binaries
+        ref: main
+        path: AO_Binaries
+        token: ${{ secrets.AO_DEV_WORKFLOW_TOKEN }}
+
+    - name: Copy libraries to binaries repository
+      run: |
+        mkdir -p AO_Binaries/Networking/Mac-arm/Debug
+        mkdir -p AO_Binaries/Networking/Mac-arm/Release
+        mkdir -p AO_Binaries/Networking/Mac-arm/Dist
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Debug
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Release
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Dist
+
+    - name: Commit and push changes to binaries repository
+      run: |
+        cd AO_Binaries
+        git config --global user.email "${{ github.event.head_commit.author.email }}"
+        git config --global user.name "${{ github.event.head_commit.author.name }}"
+        if git diff --exit-code; then
+            echo "No changes to push"
+          else
+            git add .
+            git commit -m "Update mac arm GNS libraries" -m "Triggered by commit: '${{ github.event.head_commit.message }}' https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+            git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
+        fi
