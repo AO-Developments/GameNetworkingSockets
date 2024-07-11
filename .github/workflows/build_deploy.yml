@@ -3,7 +3,7 @@ name: Build libs and deploy
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build_mac_arm:
