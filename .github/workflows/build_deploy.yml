@@ -1,0 +1,37 @@
+name: Build libs and deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_mac_arm:
+    # As of writing this flow macos-latest is arm64, keep in mind if github decides to randomly change it in the future 
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Homebrew
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install openssl
+        brew install protobuf
+        echo 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig' >> ~/.zprofile
+        source ~/.zprofile
+        
+    - name: Build project
+      run: |
+        mkdir build
+        cd build
+        cmake -G Ninja ..
+        ninja
+        ls ./
