@@ -28,19 +28,11 @@ jobs:
         brew install ninja
         echo 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig' >> ~/.zprofile
         source ~/.zprofile
-        
-    - name: Build project debug
-      run: |
-        mkdir build_debug
-        cd build_debug
-        cmake -G Ninja -DCMAKE_BUILD_TYPE=Debug ..
-        ninja
-        ls ./bin
 
-    - name: Build project release
+    - name: Build project
       run: |
-        mkdir build_release
-        cd build_release
+        mkdir build
+        cd build
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
         ninja
         ls ./bin
