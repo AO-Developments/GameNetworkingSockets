@@ -64,3 +64,62 @@ jobs:
         git add .
         git commit -m "Update mac arm GNS libraries" -m "Triggered by commit: '${{ github.event.head_commit.message }}' https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
         git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
+
+  build_mac_x86_64:
+    # As of writing this flow macos-latest-large is x86_64, keep in mind if github decides to randomly change it in the future 
+    runs-on: macos-latest-large
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Homebrew
+      run: |
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install openssl
+        brew install protobuf
+        brew install ninja
+        echo 'export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/opt/openssl/lib/pkgconfig' >> ~/.zprofile
+        source ~/.zprofile
+
+    - name: Build project
+      run: |
+        mkdir build
+        cd build
+        cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
+        ninja
+        ls ./bin
+
+    - name: Checkout AO_Binaries
+      uses: actions/checkout@v2
+      with:
+        repository: AO-Developments/AO_Binaries
+        ref: main
+        path: AO_Binaries
+        token: ${{ secrets.AO_DEV_WORKFLOW_TOKEN }}
+
+    - name: Copy libraries to binaries repository
+      run: |
+        pwd
+        mkdir -p AO_Binaries/Networking/Mac-x86_x64/Debug
+        mkdir -p AO_Binaries/Networking/Mac-x86_x64/Release
+        mkdir -p AO_Binaries/Networking/Mac-x86_x64/Dist
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Debug
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Release
+        cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Dist
+
+    - name: Commit and push changes to binaries repository
+      run: |
+        cd AO_Binaries
+        pwd
+        git config --global user.email "${{ github.event.head_commit.author.email }}"
+        git config --global user.name "${{ github.event.head_commit.author.name }}"
+        git add .
+        git commit -m "Update mac x86_64 GNS libraries" -m "Triggered by commit: '${{ github.event.head_commit.message }}' https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+        git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
