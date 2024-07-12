@@ -54,6 +54,16 @@ jobs:
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Debug
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Release
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Dist
+    
+    - name: Copy dependency libraries to binaries repository
+      run: |
+        pwd
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Debug
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Release
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Dist
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Debug
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Release
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Dist
 
     - name: Commit and push changes to binaries repository
       run: |
@@ -114,6 +124,16 @@ jobs:
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Debug
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Release
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-x86_x64/Dist
+
+    - name: Copy dependency libraries to binaries repository
+      run: |
+        pwd
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Debug
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Release
+        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Dist
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Debug
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Release
+        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Dist
 
     - name: Commit and push changes to binaries repository
       run: |
