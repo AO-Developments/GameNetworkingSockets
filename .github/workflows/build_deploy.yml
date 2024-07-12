@@ -47,27 +47,20 @@ jobs:
 
     - name: Copy libraries to binaries repository
       run: |
-        ls ./
+        pwd
         mkdir -p AO_Binaries/Networking/Mac-arm/Debug
         mkdir -p AO_Binaries/Networking/Mac-arm/Release
         mkdir -p AO_Binaries/Networking/Mac-arm/Dist
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Debug
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Release
         cp build/bin/libGameNetworkingSockets.dylib AO_Binaries/Networking/Mac-arm/Dist
-        ls AO_Binaries/Networking/Mac-arm/Debug
-        ls AO_Binaries/Networking/Mac-arm/Release
-        ls AO_Binaries/Networking/Mac-arm/Dist
 
     - name: Commit and push changes to binaries repository
       run: |
         cd AO_Binaries
-        ls ./
+        pwd
         git config --global user.email "${{ github.event.head_commit.author.email }}"
         git config --global user.name "${{ github.event.head_commit.author.name }}"
-        if git diff --exit-code; then
-            echo "No changes to push"
-          else
-            git add .
-            git commit -m "Update mac arm GNS libraries" -m "Triggered by commit: '${{ github.event.head_commit.message }}' https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-            git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
-        fi
+        git add .
+        git commit -m "Update mac arm GNS libraries" -m "Triggered by commit: '${{ github.event.head_commit.message }}' https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+        git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
