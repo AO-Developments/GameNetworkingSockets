@@ -58,12 +58,23 @@ jobs:
     - name: Copy dependency libraries to binaries repository
       run: |
         pwd
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Debug
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Release
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Dist
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Debug
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Release
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Dist
+        if [ -e /opt/homebrew/lib/libcrypto.3.dylib ]; then
+          echo "Copying libcrypto.3.dylib"
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Debug
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Release
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Dist
+        else
+          echo "Error: libcrypto.3.dylib does not exist."
+        fi
+
+        if [ -e /opt/homebrew/lib/libprotobuf.dylib ]; then
+          echo "Copying libcrypto.3.dylib"
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Debug
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Release
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Dist
+        else
+          echo "Error: libprotobuf.dylib does not exist."
+        fi
 
     - name: Commit and push changes to binaries repository
       run: |
@@ -128,12 +139,23 @@ jobs:
     - name: Copy dependency libraries to binaries repository
       run: |
         pwd
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Debug
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Release
-        cp /opt/homebrew/opt/openssl@1.1/bin/openssl AO_Binaries/Networking/Mac-arm/Dist
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Debug
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Release
-        cp /opt/homebrew/bin/protoc AO_Binaries/Networking/Mac-arm/Dist
+        if [ -e /opt/homebrew/lib/libcrypto.3.dylib ]; then
+          echo "Copying libcrypto.3.dylib"
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Debug
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Release
+          cp /opt/homebrew/lib/libcrypto.3.dylib AO_Binaries/Networking/Mac-arm/Dist
+        else
+          echo "Error: libcrypto.3.dylib does not exist."
+        fi
+
+        if [ -e /opt/homebrew/lib/libprotobuf.dylib ]; then
+          echo "Copying libcrypto.3.dylib"
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Debug
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Release
+          cp /opt/homebrew/lib/libprotobuf.dylib AO_Binaries/Networking/Mac-arm/Dist
+        else
+          echo "Error: libprotobuf.dylib does not exist."
+        fi
 
     - name: Commit and push changes to binaries repository
       run: |
