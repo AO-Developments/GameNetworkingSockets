@@ -66,6 +66,7 @@ jobs:
         git push https://${{ secrets.GITHUB_TOKEN }}:${{ secrets.AO_DEV_WORKFLOW_TOKEN }}@github.com/AO-Developments/AO_Binaries.git HEAD:main
 
   build_mac_x86_64:
+    needs: build_mac_arm
     # As of writing this flow macos-latest-large is x86_64, keep in mind if github decides to randomly change it in the future 
     runs-on: macos-latest-large
 
